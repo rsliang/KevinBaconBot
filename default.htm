@@ -1,0 +1,149 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+
+    <style>
+        .wc-header {
+            background: #4B78BE;
+            cursor: pointer;
+        }
+
+        .wc-message-from-me .wc-message-content {
+            background: #eceff1;
+            color: black;
+        }
+
+        .wc-message-from-me svg.wc-message-callout path {
+            fill: #eceff1;
+        }
+
+        .wc-message-from-bot svg.wc-message-callout path {
+            fill: #4B78BE;
+        }
+
+        .wc-message-from-bot .wc-message-content {
+            background: #4B78BE;
+            color: blue;
+        }
+
+        .wc-card {
+            background: #4B78BE;
+            border: none;
+            padding: 0;
+            font-size: 15px;
+        }
+
+            .wc-card button {
+                background: white;
+                color: #4B78BE;
+            }
+
+                .wc-card button:hover {
+                    color: white;
+                }
+
+        .wc-app h1, .wc-app h2, .wc-app h3, .wc-app h4, .wc-app p, .wc-app ul, .wc-app ol {
+            color: blue;
+        }
+
+        .wc-chatview-panel {
+            -webkit-box-shadow: 0 2px 2px #888;
+            -moz-box-shadow: 0 2px 2px #888;
+            box-shadow: 0 2px 2px #888;
+        }
+    </style>
+
+
+    <link href="https://unpkg.com/botframework-webchat/botchat.css" rel="stylesheet" />
+</head>
+
+
+
+<body style="font-family:'Segoe UI'">
+
+    <h1>The 6 Degrees of Kevin Bacon</h1>
+
+    <div id='botDiv' style='height: 600px; position: fixed; bottom: 0; z-index: 1000; background-color: #fff; width:400px;'>
+        <div id="bot">
+            <iframe src='https://webchat.botframework.com/embed/Dev-BA-QABot?s=tfM6oKo38hI.cwA.-Gc.49KPHVZmGOKABmF7CD0WtYfzEpPqxwGQCF58HxoJe40' style="height: 502px; max-width: 400px;"></iframe>
+        </div>
+    </div>
+    <!--<div id='botDiv' style='height: 38px; position: fixed; bottom: 0; z-index: 1000; background-color: #fff; width:400px;'>
+        @*<div id='botTitleBar' style='height: 38px; width: 400px; position:fixed; cursor:pointer;'></div>*@
+        <div id="bot"></div>
+    </div>-->
+    <script src="https://unpkg.com/botframework-webchat/botchat.js"></script>
+    <script type="text/javascript">
+        if (top.location != self.location) {
+            top.location.href = self.location;
+        }
+    </script>
+
+    <script>
+        (function () {
+            var params = BotChat.queryParams(location.search);
+
+            var botConnection = new BotChat.DirectLine({
+                secret: 'L9xKtW_Znaw.cwA.DHY.dq_Hhv5PKH7eBoX6AV1hV057CExusXxUE7ip3Bk0SbM',
+                token: params['t'],
+                domain: params['domain'],
+                webSocket: false //params['webSocket'] && params['webSocket'] === "true" // defaults to true
+            });
+
+            BotChat.App({
+                botConnection: botConnection,
+                user: { id: '@Model.FirstName @Model.Surname' },
+                bot: { id: 'Axi' },
+                resize: 'detect'
+            }, document.getElementById("bot"));
+
+
+            botConnection
+                .postActivity({ type: "event", value: "@Model.EncryptedRelationId", from: { id: "relationId" }, name: "relationId" })
+                .subscribe(function (id) { if (console) { console.log("Bot initialized") } })
+            .filter(activity => activity.type === "event" && activity.name === "changeBackground")
+            .subscribe(activity => changeBackgroundColor(activity.value));
+
+            //document.querySelector('body').addEventListener('click', function (e) {
+            //    e.target.matches = e.target.matches || e.target.msMatchesSelector;
+            //    if (e.target.matches('.wc-header')) {
+            //        var botDiv = document.querySelector('#botDiv');
+            //        botDiv.style.height = botDiv.style.height == '600px' ? '38px' : '600px';
+            //    };
+            //});
+        }());
+
+        const changeBackgroundColor = (newColor) => {
+
+            window.alert("here!");
+            document.body.style.backgroundColor = newColor;
+
+        }
+
+        //(function () {
+        //    var div = document.createElement("div");
+        //    document.getElementsByTagName('body')[0].appendChild(div);
+        //    div.outerHTML = "<div id='botDiv' style='height: 38px; position: fixed; bottom: 0; z-index: 1000; background-color: #fff'><div id='botTitleBar' style='height: 38px; width: 400px; position:fixed; cursor: pointer;'></div><iframe width='400px' height='600px' src='https://webchat.botframework.com/embed/Dev-BA-QABot?s=tfM6oKo38hI.cwA.-Gc.49KPHVZmGOKABmF7CD0WtYfzEpPqxwGQCF58HxoJe40'></iframe></div>";
+
+        //    document.querySelector('body').addEventListener('click', function (e) {
+        //        e.target.matches = e.target.matches || e.target.msMatchesSelector;
+        //        if (e.target.matches('#botTitleBar')) {
+        //            var botDiv = document.querySelector('#botDiv');
+        //            botDiv.style.height = botDiv.style.height == '600px' ? '38px' : '600px';
+        //        };
+        //    });
+        //}());
+    </script>
+    <div id="GameRegion" style='height: 600px; position: fixed; right: 0; z-index: 1000; background-color: #fff; width:800px;'>
+       <h1>6 Degrees game progress</h1>
+        Some game data here!
+
+    </div>
+
+    <!--<div id="KevinImage" align="right">
+        <img src="https://uproxx.files.wordpress.com/2015/07/kevin-bacon.jpg?w=650&h=400" alt="Yeah, I'm Kevin Bacon'" />
+    </div>-->
+</body>
+</html>
